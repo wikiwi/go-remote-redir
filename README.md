@@ -11,7 +11,10 @@ _go-remote-redir_ implements a http server to support [go remote import paths](h
           --redirectName string   redirect name [$GRR_REDIRECT_NAME] (default "Gitlab Project Page")
           --redirectTo string     redirect to [$GRR_REDIRECT_TO] (default "https://gitlab.com/${user}/${project}")
 
-## Example Output
+## Example
+    docker run -p 8080:8080 wikiwi/go-remote-redir serve
+
+## Output
     curl localhost:8080/user/project?go-get=1
     <html>
             <head>
