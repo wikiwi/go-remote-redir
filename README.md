@@ -34,5 +34,5 @@ _go-remote-redir_ implements a http server to support [go remote import paths](h
     </html>
 
 ## Docker Hub
-Automated build is available at the [Docker Hub](https://hub.docker.com/r/wikiwi/go-import-redir).
+Automated build is available at the [Docker Hub](https://hub.docker.com/r/wikiwi/go-remote-redir).
 
