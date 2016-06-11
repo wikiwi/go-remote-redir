@@ -2,17 +2,22 @@
 _go-remote-redir_ implements a http server to support [go remote import paths](https://golang.org/cmd/go/#hdr-Remote_import_paths).
 
 ## Usage
-    go-remote-redir serve [flags]
+    Usage:
+      robots-disallow [OPTIONS]
 
-    Flags:
-          --listen string         address to listen on [$GRR_LISTEN] (default "0.0.0.0:8080")
-          --meta string           meta tag content for go remote import feature [$GRR_META] (default "example.io/p/${user}/${project} git ssh://git@gitlab.com/${user}/${project}.git")
-          --pattern string        path pattern [$GRR_PATTERN] (default "/p/(?P<user>[^/]+)/(?P<project>[^/]+).*")
-          --redirectName string   redirect name [$GRR_REDIRECT_NAME] (default "Gitlab Project Page")
-          --redirectTo string     redirect to [$GRR_REDIRECT_TO] (default "https://gitlab.com/${user}/${project}")
+    Application Options:
+          --listen=        address to listen on (default: 0.0.0.0:8080) [$GRR_LISTEN]
+          --pattern=       path pattern (default: /p/(?P<user>[^/]+)/(?P<project>[^/]+).*) [$GRR_PATTERN]
+          --meta=          meta tag content for go remote import feature (default: example.io/p/${user}/${project} git ssh://git@gitlab.com/${user}/${project}.git) [$GRR_META]
+          --redirect-name= redirect name (default: Gitlab Project Page) [$GRR_REDIRECT_NAME]
+          --redirect-to=   redirect to (default: https://gitlab.com/${user}/${project}) [$GRR_REDIRECT_TO]
+      -v, --version        show version number
+
+    Help Options:
+      -h, --help           Show this help message
 
 ## Example
-    docker run -p 8080:8080 wikiwi/go-remote-redir serve
+    docker run -p 8080:8080 wikiwi/go-remote-redir
 
 ## Output
     curl localhost:8080/user/project?go-get=1

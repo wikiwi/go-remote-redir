@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 	"regexp"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"github.com/jessevdk/go-flags"
 )
 
+var version = "0.0.1-dev"
 var tmpl = template.Must(template.New("").Parse(`
 <html>
 	<head>
@@ -23,6 +24,15 @@ var tmpl = template.Must(template.New("").Parse(`
 	</body>
 </html>
 `))
+
+var opts struct {
+	Listen       string `long:"listen" default:"0.0.0.0:8080" env:"GRR_LISTEN" description:"address to listen on"`
+	Pattern      string `long:"pattern" default:"/p/(?P<user>[^/]+)/(?P<project>[^/]+).*" env:"GRR_PATTERN" description:"path pattern"`
+	MetaImport   string `long:"meta" default:"example.io/p/${user}/${project} git ssh://git@gitlab.com/${user}/${project}.git" env:"GRR_META" description:"meta tag content for go remote import feature"`
+	RedirectName string `long:"redirect-name" default:"Gitlab Project Page" env:"GRR_REDIRECT_NAME" description:"redirect name"`
+	RedirectTo   string `long:"redirect-to" default:"https://gitlab.com/${user}/${project}" env:"GRR_REDIRECT_TO" description:"redirect to"`
+	Version      bool   `long:"version" short:"v" description:"show version number"`
+}
 
 type Handler struct {
 	PathPattern  *regexp.Regexp
@@ -49,48 +59,26 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	var cmdServe = &cobra.Command{
-		Use:   "serve",
-		Short: "Start Go Import Redirector",
-		Long: "Starts a HTTP server implementing Go Remote Import Paths. " +
-			"See https://golang.org/cmd/go/#hdr-Import_path_syntax.",
-		Run: func(cmd *cobra.Command, args []string) {
-
-			h := &Handler{
-				regexp.MustCompile(viper.GetString("pattern")),
-				viper.GetString("meta"),
-				viper.GetString("redirect_name"),
-				viper.GetString("redirect_to"),
-			}
-			fmt.Println("Listening on " + viper.GetString("listen") + "...")
-			panic(http.ListenAndServe(viper.GetString("listen"), h))
-		},
+	parser := flags.NewParser(&opts, flags.Default)
+	parser.Name = "robots-disallow"
+	_, err := parser.Parse()
+	if err != nil {
+		if e2, ok := err.(*flags.Error); ok && e2.Type == flags.ErrHelp {
+			os.Exit(0)
+		}
+		os.Exit(1)
 	}
 
-	viper.SetEnvPrefix("grr")
-	viper.AutomaticEnv()
-
-	cmdServe.Flags().String("listen", "0.0.0.0:8080", "address to listen on [$GRR_LISTEN]")
-	viper.BindPFlag("listen", cmdServe.Flags().Lookup("listen"))
-
-	cmdServe.Flags().String("pattern", "/p/(?P<user>[^/]+)/(?P<project>[^/]+).*",
-		"path pattern [$GRR_PATTERN]")
-	viper.BindPFlag("pattern", cmdServe.Flags().Lookup("pattern"))
-
-	cmdServe.Flags().String("meta",
-		"example.io/p/${user}/${project} git ssh://git@gitlab.com/${user}/${project}.git",
-		"meta tag content for go remote import feature [$GRR_META]")
-	viper.BindPFlag("meta", cmdServe.Flags().Lookup("meta"))
-
-	cmdServe.Flags().String("redirectName", "Gitlab Project Page",
-		"redirect name [$GRR_REDIRECT_NAME]")
-	viper.BindPFlag("redirect_name", cmdServe.Flags().Lookup("redirectName"))
-
-	cmdServe.Flags().String("redirectTo", "https://gitlab.com/${user}/${project}",
-		"redirect to [$GRR_REDIRECT_TO]")
-	viper.BindPFlag("redirect_to", cmdServe.Flags().Lookup("redirectTo"))
-
-	var rootCmd = &cobra.Command{Use: "go-remote-redir"}
-	rootCmd.AddCommand(cmdServe)
-	rootCmd.Execute()
+	if opts.Version {
+		fmt.Println(version)
+	} else {
+		h := &Handler{
+			regexp.MustCompile(opts.Pattern),
+			opts.MetaImport,
+			opts.RedirectName,
+			opts.RedirectTo,
+		}
+		fmt.Println("Listening on " + opts.Listen + "...")
+		panic(http.ListenAndServe(opts.Listen, h))
+	}
 }
