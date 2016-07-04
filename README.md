@@ -3,7 +3,7 @@ _go-remote-redir_ implements a http server to support [go remote import paths](h
 
 ## Usage
     Usage:
-      robots-disallow [OPTIONS]
+      go-remote-redir [OPTIONS]
 
     Application Options:
           --listen=        address to listen on (default: 0.0.0.0:8080) [$GRR_LISTEN]

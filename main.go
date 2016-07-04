@@ -60,7 +60,7 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
 	parser := flags.NewParser(&opts, flags.Default)
-	parser.Name = "robots-disallow"
+	parser.Name = "go-remote-redir"
 	_, err := parser.Parse()
 	if err != nil {
 		if e2, ok := err.(*flags.Error); ok && e2.Type == flags.ErrHelp {
