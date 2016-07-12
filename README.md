@@ -1,6 +1,8 @@
 # go-remote-redir
 _go-remote-redir_ implements a http server to support [go remote import paths](https://golang.org/cmd/go/#hdr-Remote_import_paths).
 
+[![Build Status](https://travis-ci.org/wikiwi/go-remote-redir.svg?branch=travis)](https://travis-ci.org/wikiwi/go-remote-redir) [![Coverage Status](https://coveralls.io/repos/github/wikiwi/go-remote-redir/badge.svg?branch=master)](https://coveralls.io/github/wikiwi/go-remote-redir?branch=master) [![Code Climate](https://codeclimate.com/github/wikiwi/go-remote-redir/badges/gpa.svg)](https://codeclimate.com/github/wikiwi/go-remote-redir) [![Docker Hub](https://img.shields.io/docker/pulls/wikiwi/go-remote-redir.svg)](https://hub.docker.com/r/wikiwi/go-remote-redir)
+
 ## Usage
     Usage:
       go-remote-redir [OPTIONS]
