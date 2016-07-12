@@ -12,11 +12,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var fixPattern = "/(?P<user>[^/]+)/(?P<project>[^/]+).*"
-var fixMeta = "example.io/${user}/${project} git ssh://git@gitlab.com/${user}/${project}.git"
-var fixRedirectName = "Test"
-var fixRedirectTo = "https://test.com/${user}/${project}"
-
 func getFreePort() string {
 	l, _ := net.Listen("tcp", "localhost:0")
 	defer l.Close()
