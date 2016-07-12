@@ -22,7 +22,7 @@ _go-remote-redir_ implements a http server to support [go remote import paths](h
     docker run -p 8080:8080 wikiwi/go-remote-redir
 
 ## Output
-    curl localhost:8080/user/project?go-get=1
+    curl localhost:8080/p/user/project?go-get=1
     <html>
             <head>
                     <title>Go Remote Packages</title>
