@@ -34,14 +34,14 @@ var opts struct {
 	Version      bool   `long:"version" short:"v" description:"show version number"`
 }
 
-type Handler struct {
+type handler struct {
 	PathPattern  *regexp.Regexp
 	MetaImport   string
 	RedirectName string
 	RedirectTo   string
 }
 
-func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (h *handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path
 	if req.URL.Query().Get("go-get") != "1" || !h.PathPattern.MatchString(path) {
 		http.NotFound(rw, req)
@@ -72,7 +72,7 @@ func main() {
 	if opts.Version {
 		fmt.Println(version)
 	} else {
-		h := &Handler{
+		h := &handler{
 			regexp.MustCompile(opts.Pattern),
 			opts.MetaImport,
 			opts.RedirectName,
