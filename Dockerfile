@@ -1,5 +1,10 @@
 FROM golang:1.6-alpine
 
+LABEL org.label-schema.vcs-url="https://github.com/wikiwi/go-remote-redir" \
+      org.label-schema.vendor=wikiwi.io \
+      org.label-schema.name=go-remote-redir \
+      io.wikiwi.license=MIT
+
 RUN apk add --no-cache \
     git \
     openssh-client
