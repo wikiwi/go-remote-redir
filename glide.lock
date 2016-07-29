@@ -1,0 +1,15 @@
+hash: 20cb2079859cf5db8229745944f22513bca12f0d290bf60a6da3416840b361f7
+updated: 2016-07-29T12:33:25.633215626+07:00
+imports:
+- name: github.com/jessevdk/go-flags
+  version: f2785f5820ec967043de79c8be97edfc464ca745
+testImports:
+- name: github.com/andybalholm/cascadia
+  version: 3ad29d1ad1c4f2023e355603324348cf1f4b2d48
+- name: github.com/PuerkitoBio/goquery
+  version: 7f4291566cf7cac3be222a933e01a2bed97532b1
+- name: golang.org/x/net
+  version: 6a513affb38dc9788b449d59ffed099b8de18fa0
+  subpackages:
+  - html
+  - html/atom

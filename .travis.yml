@@ -1,11 +1,62 @@
 language: go
-sudo: false
+sudo: required
 go:
-  - 1.5
   - 1.6
+services:
+  - docker
+
+notifications:
+  slack:
+    secure: HoSGFsFx/9btowOUoT+arvULch8fX/F1DTYu14jKDxdlJfNREFaPSmj57dCuzT7UXTRk8tqqkQMDhmu1KcYEqAT9jaxykD/BZHEAEp5s8xB5I1Vpzfumx2TvnvrvB8miY1pZNfIkh6QyFLznDa8tqOX9xufuHr8z9JIrltzVZ6cc2KwBLCUoLEa1dUxdWxBEHG+++93svqKtDOOr/rs7YCWRTnSrMBBZSvdZmY9pCDNVok1iAEA/QM3Ot35mkp0VRPczk506g2xJu4btDi/90pW+DjK3WhreR2atXkVjbbhlPNNb00JLoxTeKbDly0Wf6gfYF2tXe4AOwnBSTOr9JM/2hDttEKkVq8KYY7r5qouGQFSjmQDon1T8uJWGdQXH2yk3ABQjWM3gXb1Tum1K9SIm86D5sV7oBwPh3ENoAauO00HBhS0qK60qJ0OMN7qj6WMGTeRdfdQsQbIzwt84W2FGkYg9U5Ce94WcpX6effWxugvF+PRjshu6mRSgYjJbw/CcShEzV3vNk50IRWEXyb1WXUrJ1tKfLbbPWlN55sCvisMoAtOUVKEHXxcDY+lCOgmNeO9zgK5o6qSFt6Odz0P767kGw0TUZ05h8Vdrt4BV721nZsPj3bRDp6XFc5omcRfXoXVhk6ZGHXszQF0MVY6MUgqY43457k1c7fLqX2o=
+
+cache:
+  directories:
+  - vendor
+  - $HOME/gopath/pkg
+
 before_install:
-  - go get github.com/mattn/goveralls
-  - go get golang.org/x/tools/cmd/cover
+  - export MASTER_BRANCH=origin/master
+  - git fetch --depth=50 origin master:remotes/origin/master
+
+install:
+  - if git log -1 | grep "\[ci cover\]"; then
+      go get github.com/mattn/goveralls;
+      go get golang.org/x/tools/cmd/cover;
+    fi
+  - if make has-tags; then
+      sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D;
+      sudo sh -c 'echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list';
+      sudo apt-get update;
+      sudo apt-get -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install docker-engine=1.11.2-0~trusty;
+      docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    fi
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      go get github.com/aktau/github-release;
+    fi
+
 script:
-  - $HOME/gopath/bin/goveralls -service=travis-ci
+  - set -eo pipefail
+  - make info
+  - make bootstrap
+  - if [ "${TRAVIS_SECURE_ENV_VARS}" == "false" ]; then
+      make test;
+      exit 0;
+    fi
+  - if git log -1 | grep "\[ci cover\]"; then
+      make test-with-coverage;
+      goveralls -coverprofile=.coverprofile -service=travis-ci;
+    else
+      make test;
+    fi
+
+after_success:
+  - if make has-tags; then
+      docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+      make docker-build;
+      make docker-push;
+      curl -X POST "${MICROBADGER_URL}";
+    fi
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      make github-release;
+    fi
 

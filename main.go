@@ -17,7 +17,8 @@ import (
 	"github.com/jessevdk/go-flags"
 )
 
-var version = "0.1.1-dev"
+var version = "0.1.1-alpha.1+"
+
 var tmpl = template.Must(template.New("").Parse(`
 <html>
 	<head>
