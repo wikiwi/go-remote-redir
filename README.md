@@ -1,7 +1,7 @@
 # go-remote-redir
 _go-remote-redir_ implements a http server to support [go remote import paths](https://golang.org/cmd/go/#hdr-Remote_import_paths).
 
-[![Build Status Widget]][Build Status] [![Coverage Status Widget]][Coverage Status] [![Code Climate Widget]][Code Climate] [![MicroBadger Image Widget]][MicroBadger URL]
+[![Build Status Widget]][Build Status] [![Coverage Status Widget]][Coverage Status] [![Code Climate Widget]][Code Climate] [![MicroBadger Version Widget]][MicroBadger URL]  [![MicroBadger Image Widget]][MicroBadger URL]
 
 [Build Status]: https://travis-ci.org/wikiwi/go-remote-redir
 [Build Status Widget]: https://travis-ci.org/wikiwi/go-remote-redir.svg?branch=master
@@ -10,6 +10,7 @@ _go-remote-redir_ implements a http server to support [go remote import paths](h
 [Code Climate]: https://codeclimate.com/github/wikiwi/go-remote-redir
 [Code Climate Widget]: https://codeclimate.com/github/wikiwi/go-remote-redir/badges/gpa.svg
 [MicroBadger URL]: http://microbadger.com/#/images/wikiwi/go-remote-redir
+[MicroBadger Version Widget]: https://images.microbadger.com/badges/version/wikiwi/go-remote-redir.svg
 [MicroBadger Image Widget]: https://images.microbadger.com/badges/image/wikiwi/go-remote-redir.svg
 
 ## Usage
